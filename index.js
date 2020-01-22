@@ -4,7 +4,8 @@ const Hapi = require('@hapi/hapi');
 
 const init = async () => { 
     const server = Hapi.server({
-        port: ~~process.env.PORT | 8000,
+        port: 3001,
+        host: 'data-ratp-4a.herokuapp.com'
     });
     server.route(require('./routes/getClients'));
     await server.start();
