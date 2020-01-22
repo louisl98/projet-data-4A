@@ -9,7 +9,7 @@ class Clients extends React.Component {
     }
   }
   async componentDidMount() {
-    await fetch('http://localhost:3001/api/clients')
+    await fetch('https://data-ratp-4a.herokuapp.com/api/clients')
     .then(res => res.json())
     .then((response) => {
       this.setState({ clients: response.data })
@@ -19,7 +19,17 @@ class Clients extends React.Component {
   render() {
     let eachClient = this.state.clients.map((client, i) => [
       <div className="client" key={i}>
-        <p>Age: {client.age}</p>
+        <p>Identifiant : {client.identifiant}</p>
+        <p>Age : {client.age}</p>
+        <p>Genre : {client.genre}</p>
+        <p>Code postal : {client.code_postal}</p>
+        <p>Ancienneté : {client.anciennete}</p>
+        <p>Abonné alerting : {client.abonne_alerting}</p>
+        <p>Alertes activées : {client.alertes}</p>
+        <p>Titre de transport : {client.titre_transport}</p>
+        <p>Fréquence transports : {client.frequence_transport}</p>
+        <p>Favoris horaires : {client.favoris_horaires}</p>
+        <p>Favoris adresses : {client.favoris_adresses}</p>
       </div>
     ])
     return (
