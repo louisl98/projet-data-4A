@@ -9,7 +9,7 @@ class Clients extends React.Component {
     }
   }
   async componentDidMount() {
-    await fetch('https://data-ratp-4a.herokuapp.com/api/clients')
+    await fetch('https://localhost:3000/api/clients')
     .then(res => res.json())
     .then((response) => {
       this.setState({ clients: response.data })
