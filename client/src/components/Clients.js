@@ -9,7 +9,7 @@ class Clients extends React.Component {
     }
   }
   async componentDidMount() {
-    await fetch('https://data-ratp-4a.herokuapp.com/api/clients')
+    await fetch('http://localhost:8888/api/clients')
     .then(res => res.json())
     .then((response) => {
       this.setState({ clients: response.data })
@@ -17,12 +17,6 @@ class Clients extends React.Component {
     .catch(error => console.log('Error:', error));
   }
   render() {
-    function do_check(){ 
-      var return_value=prompt("Password:");
-      if(return_value!=="equipe01")
-      window.location = "/";
-    }
-    do_check()
     let eachClient = this.state.clients.map((client, i) => [
       <div className="client" key={i}>
         <p>Identifiant : {client.identifiant}</p>
