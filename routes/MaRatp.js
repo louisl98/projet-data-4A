@@ -8,7 +8,7 @@ module.exports = [
     options: {
         validate: {
             query: joi.object().keys({
-                limit: joi.number().integer().min(1).max(50000).default(100),
+                limit: joi.number().integer().min(1).max(50000).default(50000),
                 offset: joi.number().integer().min(0).default(0),
                 genre: joi.string().alphanum().min(5).max(5)
             })
@@ -29,12 +29,14 @@ module.exports = [
                     message: 'OK',
                     meta: {
                         query: req.query,
-                        params: req.params
+                        params: req.params,
+                        results: result.length
                     },
                     data: result
                 }).code(200);
             })
             .catch(err => {
+                console.log(err)
                 return toolkit.response({
                     statusCode: 500,
                     errors: err,
@@ -55,25 +57,40 @@ module.exports = [
     },
     {
     method: 'POST',
-    path: '/api/clients',
+    path: '/api/maratp/clients',
     options: {
         validate: {
             payload: joi.object().keys({
-                id: joi.string().uuid(),
-                age: joi.number().integer().min(1).required(),
-                genre: joi.string().alphanum().min(5).max(5),
-                code_postal: joi.number().integer()
+                id: joi.number().integer().min(50000),
+                age: joi.number().integer(),
+                genre: joi.string(),
+                code_postal: joi.number().integer(),
+                anciennete: joi.number().integer(),
+                abonne_alerting: joi.bool(),
+                alertes: joi.array().items(joi.array().items(joi.string())),
+                titre_transport: joi.string().alphanum(),
+                frequence_transport: joi.string().alphanum(),
+                favoris_horaires: joi.array().items(joi.array().items(joi.string())),
+                favoris_adresses: joi.array().items(joi.array().items(joi.string()))
             })
         }
     },
     handler: async (req, toolkit) => {
+        console.log(req.payload);
         return db.insert({
-            id: req.payload.id,
-            first_name: req.payload.age,
-            last_name: req.payload.genre,
-            email: req.payload.code_postal
+            identifiant: req.payload.id,
+            age: req.payload.age,
+            genre: req.payload.genre,
+            code_postal: req.payload.code_postal,
+            anciennete: req.payload.anciennete,
+            abonne_alerting: req.payload.abonne_alerting,
+            alertes: req.payload.alertes,
+            titre_transport: req.payload.titre_transport,
+            frequence_transport: req.payload.frequence_transport,
+            favoris_horaires: req.payload.favoris_horaires,
+            favoris_adresses: req.payload.favoris_adresses
         }).into('clients')
-            .returning('identifiant', 'age', 'genre', 'code_postal')
+            .returning('identifiant', 'age', 'genre', 'code_postal', 'anciennete', 'abonne_alerting', 'alertes', 'titre_transport', 'frequence_transport', 'favoris_horaires', 'favoris_adresses')
             .then(result => {
                 return toolkit.response({
                     statusCode: 201,
@@ -81,24 +98,27 @@ module.exports = [
                     message: 'Created',
                     meta: {
                         query: req.query,
-                        params: req.params
+                        params: req.params,
+                        payload: req.payload
                     },
                     data: result
                 }).code(201);
             })
             .catch(err => {
+                console.log(err)
                 return toolkit.response({
                     statusCode: 500,
                     errors: err,
                     message: 'Internal Server Error',
                     errors: [
                         {
-                            message: 'Failed to connect to database'
+                            message: 'Database error'
                         }
                     ],
                     meta: {
                         query: req.query,
-                        params: req.params
+                        params: req.params,
+                        payload: req.payload
                     },
                     data: null
                 }).code(500);
