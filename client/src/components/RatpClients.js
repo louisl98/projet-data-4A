@@ -1,7 +1,7 @@
 import React from 'react';
 import '../App.css';
 
-class Clients extends React.Component {
+class RatpClient extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -41,4 +41,4 @@ class Clients extends React.Component {
   }
 }
 
-export default Clients;
+export default RatpClients;

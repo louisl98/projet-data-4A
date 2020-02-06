@@ -10,8 +10,7 @@ const init = async () => {
             cors: true
         }
     });
-    server.route(require('./routes/getClients'));
-    server.route(require('./routes/addClient'));
+    server.route(require('./routes/MaRatp'));
     await server.start();
     console.log('Server running on %s', server.info.uri);
 };
