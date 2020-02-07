@@ -29,7 +29,7 @@ class RatpClients extends React.Component {
     })
     .catch(error => console.log('Error:', error));
   }
-  
+
   getClients(){
     if (this.props.limit !== ""){
       return this.state.result.map((client, i) => [
