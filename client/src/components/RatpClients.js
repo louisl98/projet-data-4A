@@ -8,18 +8,34 @@ class RatpClients extends React.Component {
       result: []
     }
   }
-  async componentDidMount() {
-    let limit = this.state.limit || 500
-    const api = "http://localhost:8888/api/maratp/clients?limit="+limit
-    await fetch(api)
-    .then(res => res.json())
-    .then((response) => {
-      this.setState({ result: response.data })
-    })
-    .catch(error => console.log('Error:', error));
+  async fetchAPI(){
+    var limit = this.props.limit
+    var genre = this.props.genre
+    if (limit !== ""){
+      if (genre === "tous"){
+        const api = "http://localhost:8888/api/maratp/clients?limit="+limit
+        await fetch(api)
+        .then(res => res.json())
+        .then((response) => {
+          this.setState({ result: response.data })
+        })
+        .catch(error => console.log('Error:', error));
+      }
+      else {
+        const api = "http://localhost:8888/api/maratp/clients?limit="+limit+"&genre="+genre
+        await fetch(api)
+        .then(res => res.json())
+        .then((response) => {
+        this.setState({ result: response.data })
+      })
+      .catch(error => console.log('Error:', error));
+      }
+    }   
+    
   }
-  render() {
-      let eachClient = this.state.result.map((client, i) => [
+  getClients(){
+    if (this.props.limit !== ""){
+      return this.state.result.map((client, i) => [
         <div className="Client" key={i}>
           <p>Identifiant : {client.identifiant}</p>
           <p>Age : {client.age}</p>
@@ -34,6 +50,15 @@ class RatpClients extends React.Component {
           <p>Favoris adresses : {client.favoris_adresses}</p>
         </div>
       ])
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.limit !== this.props.limit || prevProps.genre !== this.props.genre) {
+      this.fetchAPI()
+    }
+  }
+  render() {
+      let eachClient = this.getClients()
     return (
       <div className="Clients">
         {eachClient}    
