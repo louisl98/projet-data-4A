@@ -8,7 +8,7 @@ module.exports = [
     options: {
         validate: {
             query: joi.object().keys({
-                limit: joi.number().integer().min(1).max(50000).default(50000),
+                limit: joi.number().integer().min(1).max(50000).default(500),
                 offset: joi.number().integer().min(0).default(0),
                 genre: joi.string().alphanum().min(5).max(5)
             })
@@ -17,7 +17,7 @@ module.exports = [
     handler: async (req, toolkit) => {
         function request() {
             if (req.query.genre !== undefined) {
-                return db.select().from('clients').where('genre', req.query.genre).limit(req.query.limit).offset(req.query.offset) 
+                return db.select().from('clients').where('genre', req.query.genre).limit(req.query.limit).offset(req.query.offset)
             }
             return db.select().from('clients').limit(req.query.limit).offset(req.query.offset)
         }
@@ -70,7 +70,7 @@ module.exports = [
                 alertes: joi.array().items(joi.array().items(joi.string())),
                 titre_transport: joi.string().alphanum(),
                 frequence_transport: joi.string().alphanum(),
-                favoris_horaires: joi.array().items(joi.array().items(joi.string())),
+                favorishoraires: joi.array().items(joi.array().items(joi.string())),
                 favoris_adresses: joi.array().items(joi.array().items(joi.string()))
             })
         }

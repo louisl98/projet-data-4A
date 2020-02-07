@@ -23,11 +23,21 @@
 }
 
 .Client{
-  margin: 25px;
+  padding: 25px;
+  border: 1px solid;
 }
 
 .SearchForm{
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   margin-bottom: 30px;
 }
+
+.Limit{
+  width: 30px;
+}
+
+.Limit, .Genre{
+  margin: 0 10px 0 10px;
+}
+
