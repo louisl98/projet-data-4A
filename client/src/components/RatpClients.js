@@ -19,7 +19,7 @@ class RatpClients extends React.Component {
       }
     }
   }
-
+  
   fetchAPI(){
     const api = this.getEndpoint()
     fetch(api)

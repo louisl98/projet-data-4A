@@ -2,6 +2,7 @@ const joi = require('@hapi/joi');
 const db = require('../config/database');
 
 module.exports = [
+    // Get all clients for specific query
     {
     method: 'GET',
     path: '/api/maratp/clients',
@@ -55,6 +56,7 @@ module.exports = [
             });
         }
     },
+    // Create new client
     {
     method: 'POST',
     path: '/api/maratp/clients',
