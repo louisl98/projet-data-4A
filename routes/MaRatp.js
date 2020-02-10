@@ -2,7 +2,6 @@ const joi = require('@hapi/joi');
 const db = require('../config/database');
 
 module.exports = [
-    // Get all clients for specific query
     {
     // Get all clients (first 500 results)
     method: 'GET',
@@ -134,7 +133,6 @@ module.exports = [
             });
         }
     },
-    // Create new client
     {
     // Create a client
     method: 'POST',
