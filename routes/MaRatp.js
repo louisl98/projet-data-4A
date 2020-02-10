@@ -11,16 +11,49 @@ module.exports = [
             query: joi.object().keys({
                 limit: joi.number().integer().min(1).max(50000).default(500),
                 offset: joi.number().integer().min(0).default(0),
-                genre: joi.string().alphanum().min(5).max(5)
+                genre: joi.string().alphanum().min(5).max(5),
+                titre_transport: joi.string(),
+                frequence_transport: joi.string()
             })
         }
     },
     handler: async (req, toolkit) => {
         function request() {
-            if (req.query.genre !== undefined) {
+            if (req.query.genre === undefined && req.query.titre_transport === undefined && req.query.frequence_transport === undefined) {
+                return db.select().from('clients').limit(req.query.limit).offset(req.query.offset)
+            }
+            if (req.query.genre === undefined && req.query.titre_transport !== undefined && req.query.frequence_transport !== undefined) {
+                return db.select().from('clients').where({
+                    'titre_transport': req.query.titre_transport,
+                    'frequence_transport': req.query.frequence_transport
+                }).limit(req.query.limit).offset(req.query.offset)
+            }
+            if (req.query.genre !== undefined && req.query.titre_transport !== undefined && req.query.frequence_transport === undefined) {
+                return db.select().from('clients').where({
+                    'titre_transport': req.query.titre_transport,
+                    'genre': req.query.genre
+                }).limit(req.query.limit).offset(req.query.offset)
+            }
+            if (req.query.genre !== undefined && req.query.titre_transport === undefined && req.query.frequence_transport !== undefined) {
+                return db.select().from('clients').where({
+                    'frequence_transport': req.query.frequence_transport,
+                    'genre': req.genre
+                }).limit(req.query.limit).offset(req.query.offset)
+            }
+            if (req.query.genre === undefined && req.query.titre_transport === undefined && req.query.frequence_transport !== undefined) {
+                return db.select().from('clients').where('frequence_transport', req.query.frequence_transport).limit(req.query.limit).offset(req.query.offset)
+            }
+            if (req.query.genre === undefined && req.query.titre_transport !== undefined && req.query.frequence_transport === undefined) {
+                return db.select().from('clients').where('titre_transport', req.query.titre_transport).limit(req.query.limit).offset(req.query.offset)
+            }
+            if (req.query.genre !== undefined && req.query.titre_transport === undefined && req.query.frequence_transport === undefined) {
                 return db.select().from('clients').where('genre', req.query.genre).limit(req.query.limit).offset(req.query.offset)
             }
-            return db.select().from('clients').limit(req.query.limit).offset(req.query.offset)
+            return db.select().from('clients').where({
+                'genre': req.query.genre,
+                'titre_transport': req.query.titre_transport,
+                'frequence_transport': req.query.frequence_transport
+            }).limit(req.query.limit).offset(req.query.offset)
         }
         return request()
             .then(result => {
@@ -40,11 +73,10 @@ module.exports = [
                 console.log(err)
                 return toolkit.response({
                     statusCode: 500,
-                    errors: err,
                     message: 'Internal Server Error',
                     errors: [
                         {
-                            message: 'Database error'
+                            message: err
                         }
                     ],
                     meta: {
@@ -86,11 +118,10 @@ module.exports = [
                 console.log(err)
                 return toolkit.response({
                     statusCode: 500,
-                    errors: err,
                     message: 'Internal Server Error',
                     errors: [
                         {
-                            message: 'Database error'
+                            message: err
                         }
                     ],
                     meta: {
@@ -156,11 +187,10 @@ module.exports = [
                 console.log(err)
                 return toolkit.response({
                     statusCode: 500,
-                    errors: err,
                     message: 'Internal Server Error',
                     errors: [
                         {
-                            message: 'Database error'
+                            message: err
                         }
                     ],
                     meta: {
