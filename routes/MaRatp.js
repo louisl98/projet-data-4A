@@ -3,6 +3,7 @@ const db = require('../config/database');
 
 module.exports = [
     {
+    // Get all clients (first 500 results)
     method: 'GET',
     path: '/api/maratp/clients',
     options: {
@@ -56,6 +57,53 @@ module.exports = [
         }
     },
     {
+    // Get a client by ID
+    method: 'GET',
+    path: '/api/maratp/client/{id}',
+    options: {
+        validate: {
+            params: joi.object().keys({
+                id: joi.number().integer()
+            })
+        }
+    },
+    handler: async (req, toolkit) => {
+        return db.select().from('clients').where('identifiant', req.params.id)
+            .then(result => {
+                return toolkit.response({
+                    statusCode: 200,
+                    errors: null,
+                    message: 'OK',
+                    meta: {
+                        query: req.query,
+                        params: req.params,
+                        results: result.length
+                    }, 
+                    data: result
+                }).code(200);
+            })
+            .catch(err => {
+                console.log(err)
+                return toolkit.response({
+                    statusCode: 500,
+                    errors: err,
+                    message: 'Internal Server Error',
+                    errors: [
+                        {
+                            message: 'Database error'
+                        }
+                    ],
+                    meta: {
+                        query: req.query,
+                        params: req.params
+                    },
+                    data: null
+                }).code(500);
+            });
+        }
+    },
+    {
+    // Create a client
     method: 'POST',
     path: '/api/maratp/clients',
     options: {
