@@ -3,7 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=node,react,linux,macos,windows
 
 ### JavaScript ###
-database.js
+*database.js
 
 ### Linux ###
 *~
