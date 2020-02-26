@@ -20,8 +20,12 @@ module.exports = [
     handler: async (req, toolkit) => {
         // .where('column', 'like', '%')
         function standardizeQuery () {
-            
+            if (req.query.genre === undefined){
+                req.query.genre = 'like %'
+            }
         }
+        standardizeQuery()
+        console.log(req.query)
         function request() {
             return db.select().from('clients').where({
                 'genre': req.query.genre,
@@ -29,6 +33,7 @@ module.exports = [
                 'frequence_transport': req.query.frequence_transport
             }).limit(req.query.limit).offset(req.query.offset)
         }
+        console.log(request())
         return request()
             .then(result => {
                 return toolkit.response({
