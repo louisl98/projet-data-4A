@@ -67,7 +67,7 @@ module.exports = [
         }
     },
     {
-    // Get a client by ID
+    // Get a client by its ID
     method: 'GET',
     path: '/api/maratp/client/{id}',
     options: {
