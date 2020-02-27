@@ -14,26 +14,25 @@ module.exports = [
                 genre: joi.string().min(5).max(5),
                 titre_transport: joi.string(),
                 frequence_transport: joi.string()
-            })
+            }),
         }
     },
     handler: async (req, toolkit) => {
-        // .where('column', 'like', '%')
-        function standardizeQuery () {
-            if (req.query.genre === undefined){
-                req.query.genre = 'like %'
-            }
-        }
-        standardizeQuery()
-        console.log(req.query)
         function request() {
-            return db.select().from('clients').where({
-                'genre': req.query.genre,
-                'titre_transport': req.query.titre_transport,
-                'frequence_transport': req.query.frequence_transport
-            }).limit(req.query.limit).offset(req.query.offset)
+            // if any field is undefined in req.query, remove it
+            Object.keys(req.query).forEach(key => {
+                if (req.query[key] === undefined) {
+                  delete req.query[key];
+                }
+            });
+            // use 'query' object without limit and offset as 'where' argument in SQL query 
+            limit = req.query.limit
+            offset = req.query.offset
+            delete req.query.limit
+            delete req.query.offset
+            return db.select().from('clients').where(req.query).limit(limit).offset(offset)
         }
-        console.log(request())
+        console.log(req.query)
         return request()
             .then(result => {
                 return toolkit.response({
