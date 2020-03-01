@@ -32,7 +32,6 @@ module.exports = [
             delete req.query.offset
             return db.select().from('clients').where(req.query).limit(limit).offset(offset)
         }
-        console.log(req.query)
         return request()
             .then(result => {
                 return toolkit.response({
